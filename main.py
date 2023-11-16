@@ -85,6 +85,12 @@ with gr.Blocks() as demo:
         bot, chatbot, chatbot )
 
 
+def rungui(share = False):
+    demo.queue()
+    demo.launch(share=share)
+    
+
+
 history = []
 
 if __name__ == "__main__":
@@ -96,8 +102,8 @@ if __name__ == "__main__":
 
     if args.gui:
         ## insert GUI code here
-        demo.queue()
-        demo.launch(share=args.share)
+        rungui(args.share)
+
     else: 
         while True:
             user_input = input("You: ")
