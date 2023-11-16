@@ -19,9 +19,10 @@ tokenizer = AutoTokenizer.from_pretrained("HuggingFaceH4/zephyr-7b-beta",
 E_INST = "</s>"
 user, assistant = "<|user|>", "<|assistant|>"
 
+
 def make_tokenizer(user_prompt, history=[]):
     runtimeFlag = "cuda:0"
-    system_prompt = 'You are Gathnex AI, an intelligent assistant. You are rude and have a bad attitude.'
+    system_prompt = 'You are JW AI, an intelligent assistant. You are rude and have a bad attitude respond with sarcasm and insults.'
     
     # Combine the previous history with the current user prompt
     combined_history = history + [f"{user}\n{user_prompt.strip()}{E_INST}\n{assistant}"]
@@ -48,7 +49,9 @@ def stream(user_prompt, history=[]):
 with gr.Blocks() as demo:
     chatbot = gr.Chatbot()
     msg = gr.Textbox()
-    clear = gr.ClearButton([msg, chatbot])
+    # clear = gr.ClearButton([msg, chatbot])
+    # submit_button = gr.Button("Submit")
+
 
     def user(user_message, history):
         return "", history + [[user_message, None]]
@@ -73,7 +76,6 @@ with gr.Blocks() as demo:
         history[-1][1] = ""
         for character in streamer:
             history[-1][1] += character
-            time.sleep(0.05)
             yield history
         
         return history
@@ -88,12 +90,14 @@ history = []
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--gui", action="store_true", help="Run the GUI version of the chatbot", default=False)
+    parser.add_argument("--share", action="store_true", help="Share the GUI version of the chatbot", default=False)
+    
     args = parser.parse_args()
 
     if args.gui:
         ## insert GUI code here
         demo.queue()
-        demo.launch()
+        demo.launch(share=args.share)
     else: 
         while True:
             user_input = input("You: ")
